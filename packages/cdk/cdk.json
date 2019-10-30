@@ -1,1 +1,1 @@
-{ "app": "yarn upbin ts-node index.ts" }
+{ "app": "yarn upbin ts-node stacks/index.ts" }
