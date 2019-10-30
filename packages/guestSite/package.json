@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "antd": "^3.24.3",
     "aws-amplify": "^1.2.4",
+    "office-ui-fabric-react": "^7.56.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.1.2"
