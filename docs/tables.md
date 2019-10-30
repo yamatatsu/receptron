@@ -3,19 +3,19 @@
 ## Account
 
 - **cognitoId**
-- organisationId
+- organizationId
 
 ## Event
 
-- **organisationId**
+- **organizationId**
 - **timestamp**
 - type
 - payload
   - ...
 
-## Organisation
+## Organization
 
-- **organisationId**
+- **organizationId**
 - name
 - qrCode
 - menuItems[]
@@ -34,7 +34,7 @@
 
 ## Call
 
-- **organisationId**
+- **organizationId**
 - **timestamp**
 - name
 - affiliation
