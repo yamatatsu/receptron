@@ -14,5 +14,12 @@
     "prettier": "^1.18.2",
     "ts-jest": "^24.1.0",
     "typescript": "^3.6.4"
+  },
+  "dependencies": {
+    "aws-amplify": "^1.2.4",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "react-fabric": "^0.4.1",
+    "react-router-dom": "^5.1.2"
   }
 }
