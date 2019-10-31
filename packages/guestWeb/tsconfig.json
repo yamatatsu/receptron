@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2018",
-    "module": "commonjs",
-    "lib": ["es2016", "es2017.object", "es2017.string"],
+    "lib": ["dom", "es2016", "es2017.object", "es2017.string"],
     "jsx": "react",
     "strict": true,
     "noImplicitAny": true,
@@ -14,7 +13,6 @@
     "inlineSourceMap": true,
     "inlineSources": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true
+    "esModuleInterop": true
   }
 }

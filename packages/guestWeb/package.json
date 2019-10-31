@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "upbin parcel index.html"
+  },
   "dependencies": {
     "aws-amplify": "^1.2.4",
     "office-ui-fabric-react": "^7.56.0",
