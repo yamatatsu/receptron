@@ -7,7 +7,7 @@ export class Parceptron extends cdk.Stack {
     super(parent, id, props);
 
     const handler = new lambda.Function(this, "Lambda", {
-      code: new lambda.AssetCode("./dist"),
+      code: new lambda.AssetCode("../packages/lambda/dist"),
       handler: "index.handler",
       runtime: lambda.Runtime.NODEJS_10_X,
       environment: {},

@@ -1,0 +1,14 @@
+{
+  "name": "aws",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "upbin tsc"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.34",
+    "upbin": "^0.9.2"
+  }
+}
