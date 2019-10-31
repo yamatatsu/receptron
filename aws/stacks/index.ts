@@ -1,8 +1,8 @@
-import { Parceptron } from "./Parceptron";
+import { Receptron } from "./Receptron";
 import cdk = require("@aws-cdk/core");
 
 const app = new cdk.App();
 
-new Parceptron(app, "Parceptron", {
-  stackName: "Parceptron",
+new Receptron(app, "Receptron", {
+  stackName: "Receptron",
 });
