@@ -4,7 +4,7 @@ import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
 export function App() {
   const handleClick = React.useCallback(() => {
     fetch(
-      "https://yiz5siv7e4.execute-api.ap-northeast-1.amazonaws.com/prod/calls",
+      "https://ob48zqdedg.execute-api.ap-northeast-1.amazonaws.com/prod/calls",
       {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "no-cors", // no-cors, cors, *same-origin

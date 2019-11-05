@@ -23,7 +23,11 @@ export class Receptron extends cdk.Stack {
     });
 
     const code = new lambda.AssetCode("../packages/lambda/dist");
-    const createLambda = lambdaFactory(this, code);
+    const nodeModules = new lambda.AssetCode("./layer-dist");
+    const modulesLayer = new lambda.LayerVersion(this, "modules", {
+      code: nodeModules,
+    });
+    const createLambda = lambdaFactory(this, code, [modulesLayer]);
     const healthCheck = createLambda("healthCheck");
     const createCall = createLambda("createCall");
     const callStream = createLambda("callStream");
@@ -36,19 +40,28 @@ export class Receptron extends cdk.Stack {
       }),
     );
 
-    const api = new apigateway.RestApi(this, "Receptron");
+    const api = new apigateway.RestApi(this, "Receptron", {
+      deployOptions: {
+        stageName: "prod",
+        tracingEnabled: true,
+      },
+    });
     api.root.addMethod("get", new apigateway.LambdaIntegration(healthCheck));
-    const callApi = api.root.addResource("calls", {});
+    const callApi = api.root.addResource("calls");
     callApi.addMethod("post", new apigateway.LambdaIntegration(createCall));
   }
 }
 
-const lambdaFactory = (scope: cdk.Construct, code: lambda.Code) => (
-  id: string,
-) =>
+const lambdaFactory = (
+  scope: cdk.Construct,
+  code: lambda.Code,
+  layers: lambda.LayerVersion[],
+) => (id: string) =>
   new lambda.Function(scope, id, {
     handler: `index.${id}`,
+    functionName: `Receptron-${id}`,
     code,
+    layers,
     runtime: lambda.Runtime.NODEJS_10_X,
-    environment: {},
+    tracing: lambda.Tracing.ACTIVE,
   });

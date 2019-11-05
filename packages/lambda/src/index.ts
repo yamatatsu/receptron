@@ -1,10 +1,14 @@
 import { APIGatewayProxyHandler, DynamoDBStreamHandler } from "aws-lambda";
-import { DynamoDB } from "aws-sdk";
+// @ts-ignore
+import AwsXraySdk from "aws-xray-sdk";
+import AWS from "aws-sdk";
 import { createCallItem } from "./dbItems";
 import { getParam } from "./lib";
 
 console.info("Loading function");
 
+AwsXraySdk.captureAWS(AWS);
+const { DynamoDB } = AWS;
 const ddb = new DynamoDB();
 const asyncApiResult = { statusCode: 202, body: JSON.stringify({ count: 1 }) };
 
