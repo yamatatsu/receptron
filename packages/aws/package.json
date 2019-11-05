@@ -6,7 +6,7 @@
   "scripts": {
     "cdk": "cdk",
     "synth": "cdk synth",
-    "predeploy": "mkdir -p layer-dist/nodejs && cp -r ../packages/lambda/node_modules layer-dist/nodejs",
+    "predeploy": "mkdir -p layer-dist/nodejs && cp -r ../lambda/node_modules layer-dist/nodejs",
     "deploy": "cdk deploy"
   },
   "dependencies": {

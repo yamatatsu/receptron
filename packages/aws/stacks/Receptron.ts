@@ -22,7 +22,7 @@ export class Receptron extends cdk.Stack {
       stream: dynamodb.StreamViewType.NEW_IMAGE,
     });
 
-    const code = new lambda.AssetCode("../packages/lambda/dist");
+    const code = new lambda.AssetCode("../lambda/dist");
     const nodeModules = new lambda.AssetCode("./layer-dist");
     const modulesLayer = new lambda.LayerVersion(this, "modules", {
       code: nodeModules,
