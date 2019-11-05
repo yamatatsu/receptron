@@ -28,6 +28,8 @@ export class Receptron extends cdk.Stack {
     const createCall = createLambda("createCall");
     const callStream = createLambda("callStream");
 
+    callTable.grantWriteData(createCall);
+
     callStream.addEventSource(
       new DynamoEventSource(callTable, {
         startingPosition: lambda.StartingPosition.TRIM_HORIZON,
