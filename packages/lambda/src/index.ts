@@ -2,7 +2,9 @@ import { APIGatewayProxyHandler, DynamoDBStreamHandler } from "aws-lambda";
 // @ts-ignore
 import AwsXraySdk from "aws-xray-sdk";
 import AWS from "aws-sdk";
+import { WebClient } from "@slack/web-api";
 import { createCallItem } from "./dbItems";
+import { callingArguments } from "./slack";
 import { getParam } from "./lib";
 
 console.info("Loading function");
@@ -29,7 +31,9 @@ const createCall: APIGatewayProxyHandler = async event => {
   return asyncApiResult;
 };
 const callStream: DynamoDBStreamHandler = async () => {
-  console.info("called");
+  const slack = new WebClient(process.env.SLACK_TOKEN);
+  const result = await slack.chat.postMessage(callingArguments());
+  console.info(result);
 };
 module.exports = {
   healthCheck,

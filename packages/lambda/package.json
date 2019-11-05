@@ -7,6 +7,7 @@
     "build": "upbin tsc"
   },
   "dependencies": {
+    "@slack/web-api": "^5.4.0",
     "aws-sdk": "^2.563.0",
     "aws-xray-sdk": "^2.4.0"
   },
