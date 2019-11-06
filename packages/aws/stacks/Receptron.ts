@@ -30,7 +30,14 @@ export class Receptron extends cdk.Stack {
       },
     });
 
-    const userPool = new cognito.UserPool(this, id + "UserPool", {});
+    const userPool = new cognito.UserPool(this, id + "UserPool", {
+      signInType: cognito.SignInType.EMAIL,
+    });
+    new cognito.UserPoolClient(this, id + "UserPoolClient", {
+      userPool,
+      // generateSecret?: boolean,
+      // enabledAuthFlows?: AuthFlow[],
+    });
     new apigateway.CfnAuthorizer(this, id + "CognitoAuthorizer", {
       name: id + "CognitoAuthorizer",
       type: apigateway.AuthorizationType.COGNITO,
