@@ -9,9 +9,9 @@ export class Receptron extends cdk.Stack {
   constructor(parent: cdk.App, id: string, props?: cdk.StackProps) {
     super(parent, id, props);
 
-    const { callTable } = defineDBs(this);
+    const { callTable } = defineDBs(this, id);
 
-    const createLambda = lambdaFactory(this);
+    const createLambda = lambdaFactory(this, id);
     const healthCheck = createLambda("healthCheck");
     const createCall = createLambda("createCall");
     const callStream = createLambda("callStream");
@@ -24,15 +24,15 @@ export class Receptron extends cdk.Stack {
       }),
     );
 
-    const api = new apigateway.RestApi(this, "Receptron", {
+    const api = new apigateway.RestApi(this, id + "Api", {
       deployOptions: {
         tracingEnabled: true,
       },
     });
 
-    const userPool = new cognito.UserPool(this, "UserPool", {});
-    new apigateway.CfnAuthorizer(this, "CognitoAuthorizer", {
-      name: "CognitoAuthorizer",
+    const userPool = new cognito.UserPool(this, id + "UserPool", {});
+    new apigateway.CfnAuthorizer(this, id + "CognitoAuthorizer", {
+      name: id + "CognitoAuthorizer",
       type: apigateway.AuthorizationType.COGNITO,
 
       identitySource: "method.request.header.Authorization",
@@ -52,9 +52,8 @@ export class Receptron extends cdk.Stack {
   }
 }
 
-const defineDBs = (scope: cdk.Construct) => {
-  const callTable = new dynamodb.Table(scope, "CallTable", {
-    tableName: "Call",
+const defineDBs = (scope: cdk.Construct, id: string) => {
+  const callTable = new dynamodb.Table(scope, id + "CallTable", {
     partitionKey: {
       name: "organizationId",
       type: dynamodb.AttributeType.STRING,
@@ -69,19 +68,18 @@ const defineDBs = (scope: cdk.Construct) => {
   return { callTable };
 };
 
-type LambdaFactory = (scope: cdk.Construct) => (id: string) => lambda.Function;
-const lambdaFactory: LambdaFactory = scope => {
-  const code = new lambda.AssetCode("../lambda/dist");
-  const nodeModules = new lambda.AssetCode("./layer-dist");
-  const modulesLayer = new lambda.LayerVersion(scope, "modules", {
-    code: nodeModules,
+const lambdaFactory = (scope: cdk.Construct, id: string) => {
+  const lambdaCode = new lambda.AssetCode("../lambda/dist");
+  const moduleCode = new lambda.AssetCode("./layer-dist");
+  const moduleLayer = new lambda.LayerVersion(scope, "modules", {
+    code: moduleCode,
   });
-  return id =>
-    new lambda.Function(scope, id, {
-      handler: `index.${id}`,
-      functionName: `Receptron-${id}`,
-      code,
-      layers: [modulesLayer],
+  return (functionName: string) =>
+    new lambda.Function(scope, `${id}-${functionName}`, {
+      handler: `index.${functionName}`,
+      functionName: `${id}-${functionName}`,
+      code: lambdaCode,
+      layers: [moduleLayer],
       runtime: lambda.Runtime.NODEJS_10_X,
       tracing: lambda.Tracing.ACTIVE,
     });
