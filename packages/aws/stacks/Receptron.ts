@@ -31,7 +31,16 @@ export class Receptron extends cdk.Stack {
     });
 
     const userPool = new cognito.UserPool(this, id + "UserPool", {
+      // usernameの形式。UserPool作成後の変更はできない。
       signInType: cognito.SignInType.EMAIL,
+      /**
+       * これを設定しないとメアド検証メールが飛ばない。
+       * なお、デフォルトはcode検証になっている。
+       * リンク検証に変更する場合、コンソール上で以下の操作が必要である。
+       *   - [メッセージのカスタマイズ]から[検証タイプ]を[リンク]にする
+       *   - [ドメイン名]から任意のドメインを設定する
+       */
+      autoVerifiedAttributes: [cognito.UserPoolAttribute.EMAIL],
     });
     new cognito.UserPoolClient(this, id + "UserPoolClient", {
       userPool,
