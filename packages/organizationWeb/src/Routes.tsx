@@ -5,6 +5,7 @@ import {
   Route,
   Redirect,
   RouteProps,
+  useHistory,
 } from "react-router-dom";
 import { currentAuthenticatedUser } from "./aws";
 import Top from "./components/Top";
@@ -12,23 +13,35 @@ import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import ConsoleTop from "./components/ConsoleTop";
 
-export function App() {
+export const path = {
+  top: "/",
+  signIn: "/signIn",
+  signUp: "/signUp",
+  consoleTop: "/console",
+} as const;
+export function usePushHistory(_path: typeof path[keyof typeof path]) {
+  const history = useHistory();
+  return () => history.push(_path);
+}
+
+export default function Routes() {
   return (
     <Router>
-      <div>
-        <Switch>
-          <Route exact path="/">
-            <Top />
-          </Route>
-          <Route path="/signIn">
-            <SignIn />
-          </Route>
-          <Route path="/signUp">
-            <SignUp />
-          </Route>
-          <Route path="/console" render={args => <PrivatePath {...args} />} />
-        </Switch>
-      </div>
+      <Switch>
+        <Route exact path={path.top}>
+          <Top />
+        </Route>
+        <Route path={path.signIn}>
+          <SignIn />
+        </Route>
+        <Route path={path.signUp}>
+          <SignUp />
+        </Route>
+        <Route
+          path={path.consoleTop}
+          render={args => <PrivatePath {...args} />}
+        />
+      </Switch>
     </Router>
   );
 }
@@ -41,7 +54,7 @@ function PrivatePath({ location }: RouteProps) {
     return (
       <Redirect
         to={{
-          pathname: "/signIn",
+          pathname: path.signIn,
           state: { from: location },
         }}
       />

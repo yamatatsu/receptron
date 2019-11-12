@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import { useHistory } from "react-router-dom";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
 import {
@@ -9,14 +8,15 @@ import {
 import { useFormik } from "formik";
 import { signIn, SIGN_IN_ERROR_CODE } from "../aws";
 import { Credential } from "../types";
+import { usePushHistory, path } from "../Routes";
 
 export default function SignIn() {
   const [asyncError, setAsyncError] = React.useState("");
-  const history = useHistory();
+  const toConsoleTop = usePushHistory(path.consoleTop);
   const onSubmit = useCallback(
     credential => {
       signIn(credential)
-        .then(() => history.push("/console"))
+        .then(toConsoleTop)
         .catch(err => {
           if (!Object.values(SIGN_IN_ERROR_CODE).includes(err.code)) {
             return Promise.reject(err);

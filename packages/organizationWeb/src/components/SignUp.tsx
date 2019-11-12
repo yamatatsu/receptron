@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import { useHistory } from "react-router-dom";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
 import {
@@ -9,16 +8,17 @@ import {
 import { useFormik } from "formik";
 import { signUp } from "../aws";
 import { Credential } from "../types";
+import { usePushHistory, path } from "../Routes";
 
 export default function SignUp() {
   const [asyncError, setAsyncError] = React.useState("");
-  const history = useHistory();
+  const toSignIn = usePushHistory(path.signIn);
   const { values, handleChange, handleSubmit } = useFormik<Credential>({
     initialValues: { username: "", password: "" },
     onSubmit: useCallback(
       credential => {
         signUp(credential)
-          .then(() => history.push("./signIn"))
+          .then(toSignIn)
           .catch(err => setAsyncError(err.message));
       },
       [history],
