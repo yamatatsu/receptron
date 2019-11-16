@@ -10,14 +10,16 @@ export class Receptron extends cdk.Stack {
   constructor(parent: cdk.App, id: string, props?: cdk.StackProps) {
     super(parent, id, props);
 
-    const { callTable } = defineDBs(this, id);
+    const { accountTable, callTable } = defineDBs(this, id);
 
     const createLambda = lambdaFactory(this, id);
     const healthCheck = createLambda("healthCheck");
+    const getAccount = createLambda("getAccount");
     const createCall = createLambda("createCall");
     const callStream = createLambda("callStream");
 
     callTable.grantWriteData(createCall);
+    accountTable.grantReadData(getAccount);
 
     callStream.addEventSource(
       new DynamoEventSource(callTable, {
@@ -28,6 +30,9 @@ export class Receptron extends cdk.Stack {
     const api = new apigateway.RestApi(this, id + "Api", {
       deployOptions: {
         tracingEnabled: true,
+      },
+      defaultCorsPreflightOptions: {
+        allowOrigins: ["*"],
       },
     });
 
@@ -43,27 +48,26 @@ export class Receptron extends cdk.Stack {
        */
       autoVerifiedAttributes: [cognito.UserPoolAttribute.EMAIL],
     });
-    new cognito.UserPoolClient(this, id + "UserPoolClient", {
-      userPool,
-      // generateSecret?: boolean,
-      // enabledAuthFlows?: AuthFlow[],
-    });
-    new apigateway.CfnAuthorizer(this, id + "CognitoAuthorizer", {
-      name: id + "CognitoAuthorizer",
-      type: apigateway.AuthorizationType.COGNITO,
+    new cognito.UserPoolClient(this, id + "UserPoolClient", { userPool });
+    const authorizer = new apigateway.CfnAuthorizer(
+      this,
+      id + "CognitoAuthorizer",
+      {
+        name: id + "CognitoAuthorizer",
+        type: apigateway.AuthorizationType.COGNITO,
 
-      identitySource: "method.request.header.Authorization",
-      restApiId: api.restApiId,
-      providerArns: [userPool.userPoolArn],
-    });
+        identitySource: "method.request.header.Authorization",
+        restApiId: api.restApiId,
+        providerArns: [userPool.userPoolArn],
+      },
+    );
 
     api.root.addMethod("get", new apigateway.LambdaIntegration(healthCheck));
-    const callApi = api.root.addResource("calls", {
-      defaultMethodOptions: {
-        // authorizer: {
-        //   authorizerId: authorizer.ref,
-        // },
-      },
+    const accuntApi = api.root.addResource("account");
+    const callApi = api.root.addResource("calls");
+    accuntApi.addMethod("get", new apigateway.LambdaIntegration(getAccount), {
+      authorizer: { authorizerId: authorizer.ref },
+      authorizationType: apigateway.AuthorizationType.COGNITO,
     });
     callApi.addMethod("post", new apigateway.LambdaIntegration(createCall));
   }

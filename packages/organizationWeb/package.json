@@ -8,6 +8,7 @@
     "build": "rm -rf dist && upbin parcel build index.html --no-source-maps"
   },
   "dependencies": {
+    "@aws-amplify/api": "^1.2.4",
     "@aws-amplify/auth": "^1.5.0",
     "aws-amplify": "^1.2.4",
     "formik": "^2.0.3",

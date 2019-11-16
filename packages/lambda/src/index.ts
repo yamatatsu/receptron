@@ -12,10 +12,18 @@ console.info("Loading function");
 AwsXraySdk.captureAWS(AWS);
 const { DynamoDB } = AWS;
 const ddb = new DynamoDB();
-const asyncApiResult = { statusCode: 202, body: JSON.stringify({ count: 1 }) };
+const asyncApiResult = {
+  statusCode: 202,
+  headers: { "Access-Control-Allow-Origin": "*" },
+  body: JSON.stringify({ count: 1 }),
+};
 
 const healthCheck: APIGatewayProxyHandler = async () => {
   return { statusCode: 200, body: new Date().toISOString() };
+};
+const getAccount: APIGatewayProxyHandler = async event => {
+  log({ event });
+  return asyncApiResult;
 };
 const createCall: APIGatewayProxyHandler = async event => {
   log({ event });
@@ -38,6 +46,7 @@ const callStream: DynamoDBStreamHandler = async () => {
 };
 module.exports = {
   healthCheck,
+  getAccount,
   createCall,
   callStream,
 };
