@@ -3,10 +3,12 @@ import {
   APIGatewayProxyHandler,
   DynamoDBStreamHandler,
 } from "aws-lambda";
+import { DynamoDB } from "aws-sdk";
 import {
   GetItem,
   PutItem,
   createGetAccountParams,
+  createPutAccountParams,
   createPutCallParams,
 } from "./dbItems";
 import { PostMessage, callingArguments } from "./slack";
@@ -32,6 +34,19 @@ export const getAccount = (
   return response(result.Item);
 };
 
+export const createAccount = (
+  log: Log,
+  putItem: PutItem,
+): APIGatewayProxyHandler => async event => {
+  log({ event });
+
+  const result = await putItem(createPutAccountParams(getUsernme(event)));
+  log({ result });
+  return response(
+    result.Attributes && DynamoDB.Converter.unmarshall(result.Attributes),
+  );
+};
+
 export const createCall = (
   log: Log,
   getNow: GetNow,
@@ -46,7 +61,7 @@ export const createCall = (
     ),
   );
   log({ result });
-  return response({ count: 1 });
+  return response({ ok: 1 });
 };
 
 export const callStream = (

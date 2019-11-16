@@ -15,11 +15,13 @@ export class Receptron extends cdk.Stack {
     const createLambda = lambdaFactory(this, id);
     const healthCheck = createLambda("healthCheck");
     const getAccount = createLambda("getAccount");
+    const createAccount = createLambda("createAccount");
     const createCall = createLambda("createCall");
     const callStream = createLambda("callStream");
 
     callTable.grantWriteData(createCall);
     accountTable.grantReadData(getAccount);
+    accountTable.grantWriteData(createAccount);
 
     callStream.addEventSource(
       new DynamoEventSource(callTable, {
@@ -62,13 +64,24 @@ export class Receptron extends cdk.Stack {
       },
     );
 
+    const AuthorizationMethodOptions = {
+      authorizer: { authorizerId: authorizer.ref },
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+    };
+
     api.root.addMethod("get", new apigateway.LambdaIntegration(healthCheck));
     const accuntApi = api.root.addResource("account");
     const callApi = api.root.addResource("calls");
-    accuntApi.addMethod("get", new apigateway.LambdaIntegration(getAccount), {
-      authorizer: { authorizerId: authorizer.ref },
-      authorizationType: apigateway.AuthorizationType.COGNITO,
-    });
+    accuntApi.addMethod(
+      "get",
+      new apigateway.LambdaIntegration(getAccount),
+      AuthorizationMethodOptions,
+    );
+    accuntApi.addMethod(
+      "post",
+      new apigateway.LambdaIntegration(createAccount),
+      AuthorizationMethodOptions,
+    );
     callApi.addMethod("post", new apigateway.LambdaIntegration(createCall));
   }
 }

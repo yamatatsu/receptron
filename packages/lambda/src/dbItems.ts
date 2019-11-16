@@ -1,5 +1,7 @@
 import { DynamoDB } from "aws-sdk";
 
+const marshall = DynamoDB.Converter.marshall;
+
 export type GetItem = (
   params: DynamoDB.Types.GetItemInput,
 ) => Promise<DynamoDB.Types.GetItemOutput>;
@@ -16,9 +18,17 @@ export function createGetAccountParams(
   return {
     TableName: "ReceptronAccount",
     ReturnConsumedCapacity: "TOTAL",
-    Key: {
-      cognitoUsername: { S: cognitoUsername },
-    },
+    Key: marshall({ cognitoUsername }),
+  };
+}
+
+export function createPutAccountParams(
+  cognitoUsername: string,
+): DynamoDB.Types.PutItemInput {
+  return {
+    TableName: "ReceptronAccount",
+    ReturnConsumedCapacity: "TOTAL",
+    Item: marshall({ cognitoUsername, organizationIds: [] }),
   };
 }
 
@@ -29,9 +39,6 @@ export function createPutCallParams(
   return {
     TableName: "ReceptronCall",
     ReturnConsumedCapacity: "TOTAL",
-    Item: {
-      organizationId: { S: organizationId },
-      timestamp: { S: timestamp },
-    },
+    Item: marshall({ organizationId, timestamp }),
   };
 }

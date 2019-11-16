@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { DefaultButton } from "office-ui-fabric-react/lib/Button";
-import { signOut, getAccount } from "../aws";
+import { signOut, getAccount, createAccount } from "../aws";
 import { usePushHistory, path } from "../Routes";
 
 export default function ConsoleTop() {
@@ -23,10 +23,22 @@ function useConsoleTop() {
     toTop();
   }, [history]);
 
-  const [account, setAccount] = useState(null);
-  useEffect(() => {
-    getAccount().then(setAccount);
-  }, [1]);
+  const [fetchingAccount, account] = useFetch(async () => {
+    const account = await getAccount();
+    if (account) return account;
+    return await createAccount();
+  });
 
-  return { account, handleSignOut };
+  return { fetchingAccount, account, handleSignOut };
+}
+
+function useFetch<Data>(fn: () => Promise<Data>): [boolean, Data | null] {
+  const [fetching, setFetching] = useState(true);
+  const [data, setData] = useState<Data | null>(null);
+  useEffect(() => {
+    fn()
+      .then(setData)
+      .finally(() => setFetching(false));
+  }, [1]);
+  return [fetching, data];
 }

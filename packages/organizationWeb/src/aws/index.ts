@@ -35,3 +35,4 @@ export const signUp = (credential: Credential) => Auth.signUp(credential);
 export const signOut = () => Auth.signOut();
 
 export const getAccount = () => API.get("MyAPIGatewayAPI", "/account", {});
+export const createAccount = () => API.post("MyAPIGatewayAPI", "/account", {});
