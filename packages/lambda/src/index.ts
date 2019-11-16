@@ -3,7 +3,7 @@ import AwsXraySdk from "aws-xray-sdk";
 import AWS from "aws-sdk";
 import { GetItem, PutItem } from "./dbItems";
 import { messenger } from "./slack";
-import { healthCheck, getAccount, createCall, callStream } from "./handles";
+import { healthCheck, getAccount, createCall, callStream } from "./handlers";
 
 console.info("Loading function");
 
