@@ -1,3 +1,18 @@
+import {
+  WebClient,
+  WebAPICallResult,
+  ChatPostMessageArguments,
+} from "@slack/web-api";
+
+export type PostMessage = (
+  args: ChatPostMessageArguments,
+) => Promise<WebAPICallResult>;
+
+export const messenger = (token: string | undefined): PostMessage => {
+  const slack = new WebClient(token);
+  return args => slack.chat.postMessage(args);
+};
+
 export function callingArguments() {
   return {
     channel: "CQ7URCBD5",
