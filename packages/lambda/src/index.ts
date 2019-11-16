@@ -4,6 +4,7 @@ import AWS from "aws-sdk";
 import { GetItem, PutItem } from "./dbItems";
 import { messenger } from "./slack";
 import { healthCheck, getAccount, createCall, callStream } from "./handlers";
+import { log } from "./lib";
 
 console.info("Loading function");
 
@@ -18,7 +19,7 @@ const putItem: PutItem = params => ddb.putItem(params).promise();
 
 module.exports = {
   healthCheck: healthCheck(getNow),
-  getAccount: getAccount(getItem),
-  createCall: createCall(getNow, putItem),
-  callStream: callStream(postMessage),
+  getAccount: getAccount(log, getItem),
+  createCall: createCall(log, getNow, putItem),
+  callStream: callStream(log, postMessage),
 };

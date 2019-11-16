@@ -10,8 +10,9 @@ import {
   createPutCallParams,
 } from "./dbItems";
 import { PostMessage, callingArguments } from "./slack";
-import { getParam, assertIsDefined, log } from "./lib";
+import { getParam, assertIsDefined } from "./lib";
 
+type Log = (args: any) => void;
 type GetNow = () => Date;
 
 export const healthCheck = (
@@ -21,6 +22,7 @@ export const healthCheck = (
 };
 
 export const getAccount = (
+  log: Log,
   getItem: GetItem,
 ): APIGatewayProxyHandler => async event => {
   log({ event });
@@ -31,6 +33,7 @@ export const getAccount = (
 };
 
 export const createCall = (
+  log: Log,
   getNow: GetNow,
   putItem: PutItem,
 ): APIGatewayProxyHandler => async event => {
@@ -47,6 +50,7 @@ export const createCall = (
 };
 
 export const callStream = (
+  log: Log,
   postMessage: PostMessage,
 ): DynamoDBStreamHandler => async () => {
   const result = await postMessage(callingArguments());

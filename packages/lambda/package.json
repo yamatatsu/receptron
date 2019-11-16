@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "test": "upbin jest",
     "build": "upbin tsc"
   },
   "dependencies": {
