@@ -1,8 +1,4 @@
-import {
-  APIGatewayProxyHandler,
-  DynamoDBStreamHandler,
-  CognitoUserPoolTriggerHandler,
-} from "aws-lambda";
+import { APIGatewayProxyHandler, DynamoDBStreamHandler } from "aws-lambda";
 // @ts-ignore
 import AwsXraySdk from "aws-xray-sdk";
 import AWS from "aws-sdk";
@@ -45,12 +41,6 @@ module.exports = {
   createCall,
   callStream,
 };
-
-function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
-  if (val === undefined || val === null) {
-    throw new Error(`Expected 'val' to be defined, but received ${val}`);
-  }
-}
 
 function log(obj: Object) {
   Object.entries(obj).forEach(([k, v]) => {
