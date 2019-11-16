@@ -1,9 +1,10 @@
 import * as cdk from "@aws-cdk/core";
 import * as apigateway from "@aws-cdk/aws-apigateway";
 import * as lambda from "@aws-cdk/aws-lambda";
-import * as dynamodb from "@aws-cdk/aws-dynamodb";
 import { DynamoEventSource } from "@aws-cdk/aws-lambda-event-sources";
 import * as cognito from "@aws-cdk/aws-cognito";
+
+import { defineDBs } from "./dynamodb";
 
 export class Receptron extends cdk.Stack {
   constructor(parent: cdk.App, id: string, props?: cdk.StackProps) {
@@ -67,22 +68,6 @@ export class Receptron extends cdk.Stack {
     callApi.addMethod("post", new apigateway.LambdaIntegration(createCall));
   }
 }
-
-const defineDBs = (scope: cdk.Construct, id: string) => {
-  const callTable = new dynamodb.Table(scope, id + "CallTable", {
-    partitionKey: {
-      name: "organizationId",
-      type: dynamodb.AttributeType.STRING,
-    },
-    sortKey: {
-      name: "timestamp",
-      type: dynamodb.AttributeType.STRING,
-    },
-    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    stream: dynamodb.StreamViewType.NEW_IMAGE,
-  });
-  return { callTable };
-};
 
 const lambdaFactory = (scope: cdk.Construct, id: string) => {
   const lambdaCode = new lambda.AssetCode("../lambda/dist");

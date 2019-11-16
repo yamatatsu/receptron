@@ -5,7 +5,7 @@ export function createCallItem(
   timestamp: string,
 ): DynamoDB.Types.PutItemInput {
   return {
-    TableName: "Call",
+    TableName: "ReceptronCall",
     ReturnConsumedCapacity: "TOTAL",
     Item: {
       organizationId: { S: organizationId },

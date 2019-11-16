@@ -1,10 +1,5 @@
 # DynamoDB Tables
 
-## Account
-
-- **cognitoId**
-- organizationId
-
 ## Event
 
 - **organizationId**
