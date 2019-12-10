@@ -1,22 +1,33 @@
-import React, { useCallback, FunctionComponent } from "react";
+import React, { useState, useCallback, FunctionComponent } from "react";
 import { CommandBar } from "office-ui-fabric-react/lib/CommandBar";
 import { Stack } from "office-ui-fabric-react/lib/Stack";
 import { Text } from "office-ui-fabric-react/lib/Text";
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
+import {
+  PrimaryButton,
+  DefaultButton,
+} from "office-ui-fabric-react/lib/Button";
+import { TextField } from "office-ui-fabric-react/lib/TextField";
+import {
+  Dialog,
+  DialogType,
+  DialogFooter,
+} from "office-ui-fabric-react/lib/Dialog";
+import { useEventCallback } from "rxjs-hooks";
+import { map, withLatestFrom } from "rxjs/operators";
 import { signOut } from "../../aws";
 import { usePushHistory, path } from "../../Routes";
-
-type Org = { key: string; text: string };
+import { useFormik } from "formik";
 
 const BasicTemplate: FunctionComponent = props => {
   const { children } = props;
 
-  const orgs = [
-    { key: "apple", text: "Apple" },
-    { key: "banana", text: "Banana" },
-  ];
-
-  const { SelectOrg, toConsoleTop, handleSignOut } = useBasicTemplate(orgs);
+  const {
+    CreateOrg,
+    SelectOrg,
+    toConsoleTop,
+    handleSignOut,
+  } = useBasicTemplate();
 
   return (
     <Stack>
@@ -59,6 +70,7 @@ const BasicTemplate: FunctionComponent = props => {
           />
         </Stack.Item>
       </Stack>
+      <CreateOrg />
       {children}
     </Stack>
   );
@@ -67,22 +79,108 @@ export default BasicTemplate;
 
 // private
 
-function useBasicTemplate(orgs: Org[]) {
+type Org = { name: string };
+
+function useBasicTemplate() {
   const toTop = usePushHistory(path.top);
   const toConsoleTop = usePushHistory(path.consoleTop);
 
+  const [dialogOpen, toggleDialog] = useToggle(false);
+
+  const initial: Org[] = [];
+
+  const [addOrg, orgs] = useEventCallback<Org, Org[]>(
+    (event$, state$) =>
+      event$.pipe(
+        withLatestFrom(state$),
+        map(([org, a]) => [...a, org]),
+      ),
+    initial,
+  );
+
   const SelectOrg: FunctionComponent = useCallback(
-    () => (
-      <Stack verticalAlign="center">
-        <Dropdown defaultSelectedKey={orgs[0].key} options={orgs} />
-      </Stack>
-    ),
-    [orgs],
+    () => <Control orgs={orgs} toggleDialog={toggleDialog} />,
+    [orgs, dialogOpen],
+  );
+
+  const CreateOrg: FunctionComponent = useCallback(
+    () => <Form addOrg={addOrg} open={dialogOpen} toggle={toggleDialog} />,
+    [addOrg, dialogOpen, toggleDialog],
   );
 
   const handleSignOut = useCallback(() => {
     signOut().then(toTop);
   }, [history]);
 
-  return { SelectOrg, toConsoleTop, handleSignOut };
+  return {
+    CreateOrg,
+    SelectOrg,
+    toConsoleTop,
+    handleSignOut,
+  };
+}
+
+const Control: FunctionComponent<{
+  orgs: Org[];
+  toggleDialog: () => void;
+}> = ({ orgs, toggleDialog }) => (
+  <Stack horizontal verticalAlign="center" tokens={{ childrenGap: 20 }}>
+    {orgs.length ? (
+      <>
+        <Dropdown
+          defaultSelectedKey={orgs[0].name}
+          options={orgs.map(({ name }) => ({ key: name, text: name }))}
+        />
+        <PrimaryButton onClick={toggleDialog} text="Create New Organization" />
+      </>
+    ) : (
+      <PrimaryButton onClick={toggleDialog} text="Create New Organization" />
+    )}
+  </Stack>
+);
+
+const Form: FunctionComponent<{
+  addOrg: (e: Org) => void;
+  open: boolean;
+  toggle: () => void;
+}> = ({ addOrg, open, toggle }) => {
+  const { submitForm, handleChange, values } = useFormik({
+    onSubmit: args => {
+      addOrg(args);
+      toggle();
+    },
+    initialValues: { name: "" },
+  });
+
+  return (
+    <Dialog
+      hidden={!open}
+      onDismiss={toggle}
+      dialogContentProps={{
+        type: DialogType.largeHeader,
+        title: "Create New Organization",
+        subText:
+          "At first, you need to create new organization for starting Receptron!",
+      }}
+    >
+      <form onSubmit={submitForm}>
+        <TextField
+          label="Name"
+          type="text"
+          name="name"
+          onChange={handleChange}
+          value={values.name}
+        />
+      </form>
+      <DialogFooter>
+        <PrimaryButton onClick={submitForm} text="Create" />
+        <DefaultButton onClick={toggle} text="Cancel" />
+      </DialogFooter>
+    </Dialog>
+  );
+};
+
+function useToggle(defaultValue: boolean): [boolean, () => void] {
+  const [val, set] = useState(defaultValue);
+  return [val, () => set(!val)];
 }
