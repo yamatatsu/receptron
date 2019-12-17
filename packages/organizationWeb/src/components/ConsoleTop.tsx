@@ -1,5 +1,5 @@
 import React from "react";
-import Basic from "./templates/Basic";
+import Basic from "./templates/Basic/index";
 
 export default function ConsoleTop() {
   return (
