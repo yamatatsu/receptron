@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "engines": {
+    "node": "12.x",
+    "yarn": "1.21.1"
+  },
   "scripts": {
     "start": "upbin parcel index.html",
     "build": "rm -rf dist && upbin parcel build index.html --no-source-maps"
@@ -18,7 +22,8 @@
     "react-router-dom": "^5.1.2",
     "rxjs": "^6.5.3",
     "rxjs-hooks": "^0.5.2",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "yup": "^0.27.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.16",

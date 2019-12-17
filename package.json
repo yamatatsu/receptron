@@ -4,6 +4,10 @@
   "main": "index.js",
   "author": "yamatatsu <the.kinnikuman@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": "12.x",
+    "yarn": "1.21.1"
+  },
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",

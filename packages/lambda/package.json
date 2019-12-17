@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "engines": {
+    "node": "12.x",
+    "yarn": "1.21.1"
+  },
   "scripts": {
     "test": "upbin jest",
     "build": "upbin tsc"
