@@ -1,12 +1,11 @@
-import React, { useState, useCallback, FunctionComponent } from "react";
+import React, { useCallback, FunctionComponent } from "react";
 import { Stack } from "office-ui-fabric-react/lib/Stack";
-import { useEventCallback } from "rxjs-hooks";
-import { map, withLatestFrom } from "rxjs/operators";
 import { signOut } from "../../../aws";
 import { usePushHistory, path } from "../../../Routes";
 import NavBar from "./NavBar";
 import CreateOrgDialog from "./CreateOrgDialog";
-import { Org } from "./type";
+import { orgAdded$, orgState$ } from "../../../domains/organization";
+import { useToggle, useObservable, useSubject } from "../../hooks";
 
 const BasicTemplate: FunctionComponent = props => {
   const { children } = props;
@@ -42,15 +41,8 @@ function useBasicTemplate() {
 
   const [dialogOpen, toggleDialog] = useToggle(false);
 
-  const initial: Org[] = [];
-  const [addOrg, orgs] = useEventCallback<Org, Org[]>(
-    (event$, state$) =>
-      event$.pipe(
-        withLatestFrom(state$),
-        map(([org, a]) => [...a, org]),
-      ),
-    initial,
-  );
+  const orgs = useObservable(orgState$, []);
+  const addOrg = useSubject(orgAdded$);
 
   const Dialog: FunctionComponent = useCallback(
     () => (
@@ -74,9 +66,4 @@ function useBasicTemplate() {
     handleSignOut,
     toggleDialog,
   };
-}
-
-function useToggle(defaultValue: boolean): [boolean, () => void] {
-  const [val, set] = useState(defaultValue);
-  return [val, () => set(!val)];
 }

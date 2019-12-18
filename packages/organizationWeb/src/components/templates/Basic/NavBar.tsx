@@ -4,7 +4,7 @@ import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 import { Stack } from "office-ui-fabric-react/lib/Stack";
 import { Text } from "office-ui-fabric-react/lib/Text";
 import { PrimaryButton } from "office-ui-fabric-react/lib/Button";
-import { Org } from "./type";
+import { Org } from "../../../domains/organization";
 
 type Props = {
   toConsoleTop: () => void;
