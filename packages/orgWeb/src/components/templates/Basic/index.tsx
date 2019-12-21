@@ -4,7 +4,7 @@ import { signOut } from "../../../aws";
 import { usePushHistory, path } from "../../../Routes";
 import NavBar from "./NavBar";
 import CreateOrgDialog from "./CreateOrgDialog";
-import { orgAdded$, orgState$ } from "../../../domains/organization";
+import { orgAdded$, orgState$ } from "../../../domains/org";
 import { useToggle, useObservable, useSubject } from "../../hooks";
 
 const BasicTemplate: FunctionComponent = props => {

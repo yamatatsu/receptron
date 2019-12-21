@@ -10,7 +10,7 @@ import {
   DialogFooter,
 } from "office-ui-fabric-react/lib/Dialog";
 import { useFormik } from "formik";
-import { Org } from "../../../domains/organization";
+import { Org } from "../../../domains/org";
 
 type Props = {
   addOrg: (e: Org) => void;
