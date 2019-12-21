@@ -17,11 +17,8 @@ type Props = {
   open: boolean;
   toggle: () => void;
 };
-const CreateOrgDialog: FunctionComponent<Props> = ({
-  addOrg,
-  open,
-  toggle,
-}) => {
+const CreateOrgDialog: FunctionComponent<Props> = props => {
+  const { addOrg, open, toggle } = props;
   const { submitForm, handleChange, values } = useFormik({
     onSubmit: args => {
       addOrg(args);

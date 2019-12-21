@@ -8,7 +8,7 @@
     "yarn": "1.21.1"
   },
   "scripts": {
-    "start": "upbin parcel index.html",
+    "start": "upbin parcel index.html --open",
     "build": "rm -rf dist && upbin parcel build index.html --no-source-maps"
   },
   "dependencies": {
