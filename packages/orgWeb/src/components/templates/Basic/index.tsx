@@ -9,14 +9,11 @@ import { useToggle, useObservable, useSubject } from "../../hooks";
 
 const BasicTemplate: FunctionComponent = props => {
   const { children } = props;
+  const handleSignOut = useHandleSignOut();
+  const toConsoleTop = usePushHistory(path.consoleTop);
+  const orgs = useObservable(orgState$, []);
 
-  const {
-    Dialog,
-    orgs,
-    toConsoleTop,
-    handleSignOut,
-    toggleDialog,
-  } = useBasicTemplate();
+  const { Dialog, toggleDialog } = useBasicTemplate();
 
   return (
     <Stack>
@@ -35,13 +32,14 @@ export default BasicTemplate;
 
 // private
 
-function useBasicTemplate() {
+function useHandleSignOut() {
   const toTop = usePushHistory(path.top);
-  const toConsoleTop = usePushHistory(path.consoleTop);
+  const handleSignOut = useCallback(() => signOut().then(toTop), [true]);
+  return handleSignOut;
+}
 
+function useBasicTemplate() {
   const [dialogOpen, toggleDialog] = useToggle(false);
-
-  const orgs = useObservable(orgState$, []);
   const addOrg = useSubject(orgAdded$);
 
   const Dialog: FunctionComponent = useCallback(
@@ -55,15 +53,5 @@ function useBasicTemplate() {
     [addOrg, dialogOpen, toggleDialog],
   );
 
-  const handleSignOut = useCallback(() => {
-    signOut().then(toTop);
-  }, [history]);
-
-  return {
-    Dialog,
-    orgs,
-    toConsoleTop,
-    handleSignOut,
-    toggleDialog,
-  };
+  return { Dialog, toggleDialog };
 }
