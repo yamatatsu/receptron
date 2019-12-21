@@ -18,3 +18,11 @@ export function log(obj: Object) {
     console.log(`${k}:: ${JSON.stringify(v, null, 2)}`);
   });
 }
+
+export function response(body: Object | undefined) {
+  return {
+    statusCode: 200,
+    headers: { "Access-Control-Allow-Origin": "*" },
+    body: JSON.stringify(body),
+  };
+}
