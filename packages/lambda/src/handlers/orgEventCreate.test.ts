@@ -4,7 +4,7 @@ const marshall = DynamoDB.Converter.marshall;
 
 const log = () => {};
 const authorizedEvent = {
-  body: JSON.stringify({ evantType: "test_evantType" }),
+  body: JSON.stringify({ eventType: "test_eventType" }),
   requestContext: {
     requestId: "test_requestId",
     authorizer: { claims: { sub: "test_username" } },
@@ -31,8 +31,8 @@ test("orgEventCreate/putItem", async () => {
       marshall({
         requestId: "test_requestId",
         username: "test_username",
-        evantType: "test_evantType",
-        payload: { evantType: "test_evantType" },
+        eventType: "test_eventType",
+        payload: { eventType: "test_eventType" },
       }),
     );
     return Promise.resolve({});

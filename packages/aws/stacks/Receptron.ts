@@ -10,15 +10,17 @@ export class Receptron extends cdk.Stack {
   constructor(parent: cdk.App, id: string, props?: cdk.StackProps) {
     super(parent, id, props);
 
-    const { accountTable, callTable } = defineDBs(this, id);
+    const { orgEventTable, accountTable, callTable } = defineDBs(this, id);
 
     const createLambda = lambdaFactory(this, id);
     const healthCheck = createLambda("healthCheck");
+    const createOrgEvent = createLambda("createOrgEvent");
     const getAccount = createLambda("getAccount");
     const createAccount = createLambda("createAccount");
     const createCall = createLambda("createCall");
     const callStream = createLambda("callStream");
 
+    orgEventTable.grantWriteData(createOrgEvent);
     callTable.grantWriteData(createCall);
     accountTable.grantReadData(getAccount);
     accountTable.grantWriteData(createAccount);
@@ -70,8 +72,14 @@ export class Receptron extends cdk.Stack {
     };
 
     api.root.addMethod("get", new apigateway.LambdaIntegration(healthCheck));
+    const orgEventApi = api.root.addResource("orgEvent");
     const accuntApi = api.root.addResource("account");
     const callApi = api.root.addResource("calls");
+    orgEventApi.addMethod(
+      "post",
+      new apigateway.LambdaIntegration(createOrgEvent),
+      AuthorizationMethodOptions,
+    );
     accuntApi.addMethod(
       "get",
       new apigateway.LambdaIntegration(getAccount),

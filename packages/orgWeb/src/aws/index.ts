@@ -36,3 +36,9 @@ export const signOut = () => Auth.signOut();
 
 export const getAccount = () => API.get("MyAPIGatewayAPI", "/account", {});
 export const createAccount = () => API.post("MyAPIGatewayAPI", "/account", {});
+
+type Org = { name: string };
+export const createOrgEvent = (org: Org): Promise<void> =>
+  API.post("MyAPIGatewayAPI", "/orgEvent", {
+    body: { eventType: "org_created", org },
+  });

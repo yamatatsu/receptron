@@ -11,7 +11,7 @@
     "cdk": "cdk",
     "synth": "cdk synth",
     "predeploy": "mkdir -p layer-dist/nodejs && cp -r ../lambda/node_modules layer-dist/nodejs",
-    "deploy": "cdk deploy"
+    "deploy": "dotenv cdk deploy"
   },
   "dependencies": {
     "@aws-cdk/aws-apigateway": "^1.17.1",
@@ -30,5 +30,8 @@
     "@aws-cdk/core": "^1.17.1",
     "aws-cdk": "^1.17.1",
     "upbin": "^0.9.2"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^3.1.0"
   }
 }

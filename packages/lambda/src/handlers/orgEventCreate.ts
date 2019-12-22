@@ -18,7 +18,7 @@ const schema = yup
   .shape({
     requestId: yup.string().required(),
     username: yup.string().required(),
-    evantType: yup.string().required(),
+    eventType: yup.string().required(),
     payload: yup.object().required(),
   })
   .strict(true)
@@ -35,7 +35,7 @@ export default (log: Log, putItem: PutItem) => async (
         return {
           requestId: e.requestContext.requestId,
           username: e.requestContext.authorizer?.claims?.sub,
-          evantType: body.evantType,
+          eventType: body.eventType,
           payload: body,
         };
       }),

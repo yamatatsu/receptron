@@ -11,7 +11,9 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "predeploy": "yarn build",
+    "deploy": "lerna run deploy --stream"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",

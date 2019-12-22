@@ -46,7 +46,7 @@ export function createPutCallParams(
 export function toPutOrgEventParams(orgEvent: {
   requestId: string;
   username: string;
-  evantType: string;
+  eventType: string;
   payload: object;
 }): DynamoDB.Types.PutItemInput {
   return PutItemInput("OrgEvent")(orgEvent);

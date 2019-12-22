@@ -2,32 +2,26 @@ import * as cdk from "@aws-cdk/core";
 import * as dynamodb from "@aws-cdk/aws-dynamodb";
 
 export const defineDBs = (scope: cdk.Construct, id: string) => {
-  const accountTable = new dynamodb.Table(scope, id + "AccountTable", {
-    tableName: id + "Account",
+  const createDynamodbTable = DynamodbTable(scope, id);
+  const orgEventTable = createDynamodbTable("OrgEvent", {
+    partitionKey: {
+      name: "requestId",
+      type: dynamodb.AttributeType.STRING,
+    },
+  });
+  const accountTable = createDynamodbTable("Account", {
     partitionKey: {
       name: "cognitoUsername",
       type: dynamodb.AttributeType.STRING,
     },
-    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    stream: dynamodb.StreamViewType.NEW_IMAGE,
   });
-
-  const organizationTable = new dynamodb.Table(
-    scope,
-    id + "OrganizationTable",
-    {
-      tableName: id + "Organization",
-      partitionKey: {
-        name: "organizationId",
-        type: dynamodb.AttributeType.STRING,
-      },
-      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-      stream: dynamodb.StreamViewType.NEW_IMAGE,
+  const organizationTable = createDynamodbTable("Organization", {
+    partitionKey: {
+      name: "organizationId",
+      type: dynamodb.AttributeType.STRING,
     },
-  );
-
-  const callTable = new dynamodb.Table(scope, id + "CallTable", {
-    tableName: id + "Call",
+  });
+  const callTable = createDynamodbTable("Call", {
     partitionKey: {
       name: "organizationId",
       type: dynamodb.AttributeType.STRING,
@@ -36,8 +30,18 @@ export const defineDBs = (scope: cdk.Construct, id: string) => {
       name: "timestamp",
       type: dynamodb.AttributeType.STRING,
     },
+  });
+  return { orgEventTable, accountTable, organizationTable, callTable };
+};
+
+const DynamodbTable = (scope: cdk.Construct, id: string) => (
+  tableName: string,
+  props: dynamodb.TableProps,
+) => {
+  return new dynamodb.Table(scope, id + tableName + "Table", {
+    tableName: id + tableName,
+    ...props,
     billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     stream: dynamodb.StreamViewType.NEW_IMAGE,
   });
-  return { accountTable, organizationTable, callTable };
 };
