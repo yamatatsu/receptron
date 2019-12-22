@@ -1,5 +1,4 @@
 import { DynamoDB } from "aws-sdk";
-
 const marshall = DynamoDB.Converter.marshall;
 
 export type GetItem = (
@@ -9,36 +8,46 @@ export type PutItem = (
   params: DynamoDB.Types.PutItemInput,
 ) => Promise<DynamoDB.Types.PutItemOutput>;
 
-export const getItem = (ddb: DynamoDB): GetItem => params =>
-  ddb.getItem(params).promise();
+const GetItemInput = (tableaName: string) => (
+  model: object,
+): DynamoDB.Types.GetItemInput => ({
+  TableName: "Receptron" + tableaName,
+  ReturnConsumedCapacity: "TOTAL",
+  Key: marshall(model),
+});
+
+const PutItemInput = (tableaName: string) => (
+  model: object,
+): DynamoDB.Types.PutItemInput => ({
+  TableName: "Receptron" + tableaName,
+  ReturnConsumedCapacity: "TOTAL",
+  Item: marshall(model),
+});
 
 export function createGetAccountParams(
   cognitoUsername: string,
 ): DynamoDB.Types.GetItemInput {
-  return {
-    TableName: "ReceptronAccount",
-    ReturnConsumedCapacity: "TOTAL",
-    Key: marshall({ cognitoUsername }),
-  };
+  return GetItemInput("Account")({ cognitoUsername });
 }
 
 export function createPutAccountParams(
   cognitoUsername: string,
 ): DynamoDB.Types.PutItemInput {
-  return {
-    TableName: "ReceptronAccount",
-    ReturnConsumedCapacity: "TOTAL",
-    Item: marshall({ cognitoUsername, organizationIds: [] }),
-  };
+  return PutItemInput("Account")({ cognitoUsername, organizationIds: [] });
 }
 
 export function createPutCallParams(
   organizationId: string,
   timestamp: string,
 ): DynamoDB.Types.PutItemInput {
-  return {
-    TableName: "ReceptronCall",
-    ReturnConsumedCapacity: "TOTAL",
-    Item: marshall({ organizationId, timestamp }),
-  };
+  return PutItemInput("Call")({ organizationId, timestamp });
+}
+
+export function toPutOrgEventParams(orgEvent: {
+  requestId: string;
+  username: string;
+  evantType: string;
+  payload: object;
+}): DynamoDB.Types.PutItemInput {
+  return PutItemInput("OrgEvent")(orgEvent);
 }

@@ -28,7 +28,7 @@ const handlers: Record<
   APIGatewayProxyHandler | DynamoDBStreamHandler
 > = {
   healthCheck: healthCheck(getNow),
-  createOrgEvent: orgEventCreate(log),
+  createOrgEvent: orgEventCreate(log, putItem),
   getAccount: accountGet(log, getItem),
   createAccount: accountCreate(log, putItem),
   createCall: callCreate(log, getNow, putItem),
