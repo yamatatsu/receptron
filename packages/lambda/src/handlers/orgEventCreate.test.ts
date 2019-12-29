@@ -7,7 +7,7 @@ const authorizedEvent = {
   body: JSON.stringify({ eventType: "test_eventType" }),
   requestContext: {
     requestId: "test_requestId",
-    authorizer: { claims: { sub: "test_username" } },
+    authorizer: { claims: { sub: "test_cognitoUsername" } },
   },
 };
 
@@ -25,12 +25,12 @@ test("orgEventCreate", async () => {
 test("orgEventCreate/putItem", async () => {
   const event = authorizedEvent;
   const putItem = (params: any) => {
-    expect(params.TableName).toEqual("ReceptronOrgEvent");
+    expect(params.TableName).toEqual("ReceptronOrgEvent20191229");
     expect(params.ReturnConsumedCapacity).toEqual("TOTAL");
     expect(params.Item).toStrictEqual(
       marshall({
+        cognitoUsername: "test_cognitoUsername",
         requestId: "test_requestId",
-        username: "test_username",
         eventType: "test_eventType",
         payload: { eventType: "test_eventType" },
       }),

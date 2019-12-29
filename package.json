@@ -11,8 +11,8 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
-    "test": "lerna run test",
-    "predeploy": "yarn build",
+    "test": "lerna run test --stream",
+    "predeploy": "yarn build --stream",
     "deploy": "lerna run deploy --stream"
   },
   "devDependencies": {

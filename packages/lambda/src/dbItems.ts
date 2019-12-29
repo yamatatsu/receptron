@@ -44,10 +44,10 @@ export function createPutCallParams(
 }
 
 export function toPutOrgEventParams(orgEvent: {
+  cognitoUsername: string;
   requestId: string;
-  username: string;
   eventType: string;
   payload: object;
 }): DynamoDB.Types.PutItemInput {
-  return PutItemInput("OrgEvent")(orgEvent);
+  return PutItemInput("OrgEvent20191229")(orgEvent);
 }

@@ -3,8 +3,12 @@ import * as dynamodb from "@aws-cdk/aws-dynamodb";
 
 export const defineDBs = (scope: cdk.Construct, id: string) => {
   const createDynamodbTable = DynamodbTable(scope, id);
-  const orgEventTable = createDynamodbTable("OrgEvent", {
+  const orgEventTable = createDynamodbTable("OrgEvent20191229", {
     partitionKey: {
+      name: "cognitoUsername",
+      type: dynamodb.AttributeType.STRING,
+    },
+    sortKey: {
       name: "requestId",
       type: dynamodb.AttributeType.STRING,
     },

@@ -16,8 +16,8 @@ type Event = {
 const schema = yup
   .object()
   .shape({
+    cognitoUsername: yup.string().required(),
     requestId: yup.string().required(),
-    username: yup.string().required(),
     eventType: yup.string().required(),
     payload: yup.object().required(),
   })
@@ -33,8 +33,8 @@ export default (log: Log, putItem: PutItem) => async (
       map(e => {
         const body = JSON.parse(e.body || "");
         return {
+          cognitoUsername: e.requestContext.authorizer?.claims?.sub,
           requestId: e.requestContext.requestId,
-          username: e.requestContext.authorizer?.claims?.sub,
           eventType: body.eventType,
           payload: body,
         };
