@@ -2,17 +2,22 @@ import Auth, { CognitoUser } from "@aws-amplify/auth";
 import API from "@aws-amplify/api";
 import { Credential } from "../types";
 
+const urlBase = process.env.URL_BASE;
+const userPoolId = process.env.USER_POOL_ID;
+const userPoolWebClientId = process.env.USER_POOL_WEB_CLIENT_ID;
+const identityPoolId = process.env.IDENTITY_POOL_ID;
+
 Auth.configure({
   region: "ap-northeast-1",
-  userPoolId: "ap-northeast-1_NX2h2wZ5X",
-  userPoolWebClientId: "7ebtn9qhiara40f1ufrmd9nphq",
+  userPoolId,
+  userPoolWebClientId,
+  identityPoolId,
 });
 API.configure({
   endpoints: [
     {
       name: "MyAPIGatewayAPI",
-      endpoint:
-        "https://h7kak0nkod.execute-api.ap-northeast-1.amazonaws.com/prod",
+      endpoint: urlBase,
       custom_header: () =>
         Auth.currentSession()
           .then(session => session.getIdToken().getJwtToken())
