@@ -12,7 +12,7 @@
     "build": "rm -rf dist && upbin parcel build index.html --no-source-maps"
   },
   "dependencies": {
-    "aws-amplify": "^1.2.4",
+    "aws-amplify": "^2.0.0",
     "office-ui-fabric-react": "^7.56.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
