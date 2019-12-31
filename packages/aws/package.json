@@ -8,8 +8,9 @@
     "yarn": "1.21.1"
   },
   "scripts": {
-    "cdk": "cdk",
-    "synth": "cdk synth",
+    "cdk": "dotenv cdk",
+    "synth": "dotenv cdk synth",
+    "diff": "dotenv cdk diff",
     "predeploy": "mkdir -p layer-dist/nodejs && cp -r ../lambda/node_modules layer-dist/nodejs",
     "deploy": "dotenv cdk deploy"
   },
