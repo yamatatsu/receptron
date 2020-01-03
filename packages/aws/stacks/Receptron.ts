@@ -54,7 +54,7 @@ export class Receptron extends cdk.Stack {
       },
     );
 
-    const AuthorizationMethodOptions = {
+    const AuthorizationMethodOptions: apigateway.MethodOptions = {
       authorizer: { authorizerId: authorizer.ref },
       authorizationType: apigateway.AuthorizationType.COGNITO,
     };
