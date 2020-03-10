@@ -664,10 +664,10 @@ resolve-pathname@^3.0.0:
   resolved "https://registry.yarnpkg.com/resolve-pathname/-/resolve-pathname-3.0.0.tgz#99d02224d3cf263689becbb393bc560313025dcd"
   integrity sha512-C7rARubxI8bXFNB/hqcp/4iUeIXJhJZvFPFPiSPRnhU5UPxzMFIl+2E6yY6c4k9giDJAhtV+enfA+G89N6Csng==
 
-rxjs-hooks@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/rxjs-hooks/-/rxjs-hooks-0.5.2.tgz#2b4f287d8d0c2b108e7a6f4eee628528c1d974f6"
-  integrity sha512-sm2FMw1CbcYM7x4CRQ9OLiDtwpgQaiG8owURC2rB/iw7txpGSMU3BN25/wm19cMctezZsTM2EeH7jiyBqSfuSw==
+rxjs-hooks@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/rxjs-hooks/-/rxjs-hooks-0.6.0.tgz#46a5b4d4f67ced79255758c62771c98dff806762"
+  integrity sha512-QanyZVKq34l0mLhLx4GWcDa1U+zVOrK8LXwXC9sdfcze/tJesAc81W2fSCJ9CDF5knreyMPE4ktPQuhilIXhZw==
   dependencies:
     tslib "^1.10.0"
     use-constant "^1.0.0"
